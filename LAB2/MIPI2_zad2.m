@@ -1,36 +1,42 @@
-% Parametry
-num_steps = 30;       % Liczba lat
-r_values = 0:1:4;   % Zakres wartości parametru r (od 0 do 4 z krokiem 0.1)
-X0 = 0.1;             % Początkowa liczebność populacji (można zmieniać w zakresie 0 do 1)
+% lata
+liczba_krokow = 30;
 
-% Przygotowanie zmiennej do przechowywania wyników
-time = 0:num_steps;   % Wektor czasu (0 do 30 lat)
-populations = zeros(length(r_values), num_steps + 1);  % Macierz do przechowywania wyników
+% zakres r
+wartosci_r = 0:1:4;
 
-% Symulacja dla różnych wartości r
-for j = 1:length(r_values)
-    r = r_values(j);  % Wartość parametru r
-    X = zeros(1, num_steps + 1);  % Wektor liczebności populacji
-    X(1) = X0;  % Ustawienie warunku początkowego
+% war początkowy X(k0)
+X0 = 0.4;
+
+% 0 - 30 lat
+czas = 0:liczba_krokow;   
+
+% macierz do wyników
+populacja = zeros(length(wartosci_r), liczba_krokow+1);
+
+% Różne r
+for j = 1:length(wartosci_r)
+    r = wartosci_r(j); % przypisanie r
+    X = zeros(1, liczba_krokow + 1);  
+    X(1) = X0; 
     
-    % Symulacja liczebności populacji dla kolejnych lat
-    for k = 1:num_steps
-        X(k + 1) = r * X(k) * (1 - X(k));  % Równanie różnicowe (2)
+    
+    for k = 1:liczba_krokow
+        % równanie
+        X(k + 1) = r * X(k) * (1 - X(k));
     end
     
-    % Zapis wyników dla bieżącej wartości r
-    populations(j, :) = X;
+    populacja(j, :) = X;
 end
 
-% Rysowanie wykresów dla różnych wartości r
+% Wykresy
 figure;
 hold on;
-for j = 1:length(r_values)
-    plot(time, populations(j, :), 'DisplayName', ['r = ' num2str(r_values(j))]);
+for j = 1:length(wartosci_r)
+    plot(czas, populacja(j, :), 'DisplayName', ['r = ' num2str(wartosci_r(j))]);
 end
 hold off;
 
-% Dodanie opisów i legendy
+% Legenda & opis
 xlabel('Czas (lata)');
 ylabel('Liczebność populacji');
 title('Symulacja liczebności populacji dorsza dla różnych wartości parametru r');
